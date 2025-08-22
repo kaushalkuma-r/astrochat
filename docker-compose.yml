@@ -1,0 +1,70 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: astrochat_postgres
+    environment:
+      POSTGRES_DB: astrochat
+      POSTGRES_USER: astrochat
+      POSTGRES_PASSWORD: astrochat123
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U astrochat -d astrochat"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 40s
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: astrochat_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Astrochat API
+  astrochat:
+    build: .
+    container_name: astrochat_api
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://astrochat:astrochat123@postgres:5432/astrochat
+      - REDIS_URL=redis://redis:6379
+      - CHROMA_PERSIST_DIRECTORY=/app/chroma_db
+      - DEBUG=True
+      - LOG_LEVEL=INFO
+      - CACHE_TTL_MINUTES=30
+    volumes:
+      - ./archive:/app/archive
+      - chroma_data:/app/chroma_db
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 120s
+
+volumes:
+  postgres_data:
+  redis_data:
+  chroma_data:

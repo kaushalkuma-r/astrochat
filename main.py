@@ -1,0 +1,16 @@
+import uvicorn
+from app.api import app
+from app.logging_config import setup_logging
+
+if __name__ == "__main__":
+    # Setup logging
+    logger = setup_logging()
+    logger.info("Starting Astrochat API server...")
+    
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=False,
+        log_level="info"
+    )
