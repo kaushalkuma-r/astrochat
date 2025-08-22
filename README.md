@@ -46,14 +46,13 @@ astrochat/
 
 ### Prerequisites
 - Python 3.8+
-- Google Gemini API Key
-- 4GB+ RAM (for translation model)
+- Google Gemini API Key - shared in the email
 
 ### 1. Setup and Run
 ```bash
-git clone <repository-url>
+git clone https://github.com/kaushalkuma-r/astrochat.git
 cd astrochat
-./run.sh
+./run.sh --- Will prompt you for the API key shared in the email
 ```
 
 The `run.sh` script handles everything:
@@ -103,18 +102,7 @@ Once running, visit:
 - Odia (or)
 - Assamese (as)
 
-## 🔧 Configuration
 
-Environment variables in `.env`:
-```env
-GEMINI_API_KEY=your_api_key_here
-DATABASE_URL=postgresql://astrochat:astrochat123@postgres:5432/astrochat
-REDIS_URL=redis://redis:6379
-CHROMA_PERSIST_DIRECTORY=/app/chroma_db
-CACHE_TTL_MINUTES=30
-DEBUG=True
-LOG_LEVEL=INFO
-```
 
 ## 🧪 Testing
 
