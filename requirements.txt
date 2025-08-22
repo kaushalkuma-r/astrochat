@@ -16,3 +16,7 @@ httpx==0.25.2
 torch>=2.0.0
 transformers>=4.30.0
 IndicTransToolkit>=1.0.0
+sentencepiece>=0.1.99
+sacremoses>=0.0.53
+accelerate>=0.20.0
+protobuf>=3.20.0

@@ -51,8 +51,7 @@ async def startup_event():
         # Create horoscope service with global instances
         horoscope_service = HoroscopeService()
         horoscope_service.chroma_service = get_chroma_service()
-        # horoscope_service.translation_service = get_translation_service()
-        horoscope_service.translation_service = None  # Translation disabled
+        horoscope_service.translation_service = get_translation_service()
         
         logger.info("✅ Astrochat API initialization completed successfully!")
     else:

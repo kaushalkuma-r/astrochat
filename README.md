@@ -1,15 +1,21 @@
-# 🌌 Astrochat - AI-Powered Horoscope API
+# 🌌 Astrochat - AI-Powered Multilingual Horoscope API
 
-A modern, containerized horoscope API that combines traditional astrology with AI-powered insights using vector search and multi-language translation.
+A modern horoscope API with AI-powered insights and neural machine translation for 12+ Indian languages.
 
 ## 🚀 Features
 
-- **AI-Powered Horoscopes**: Uses Google Gemini LLM for personalized insights
+- **AI-Powered Horoscopes**: Google Gemini LLM for personalized insights
+- **Neural Translation**: IndicTrans2 for 12+ Indian languages (Hindi, Bengali, Tamil, etc.)
 - **Vector Search**: ChromaDB for semantic horoscope retrieval
-- **Multi-Language Support**: IndicTrans2 for translation to 12+ Indian languages
-- **Caching**: Redis-based caching with configurable TTL
-- **Containerized**: Full Docker setup with PostgreSQL, Redis, and ChromaDB
+- **Smart Caching**: Redis-based caching for performance
 - **RESTful API**: FastAPI with automatic documentation
+
+## 🌐 Translation Logic
+
+1. **Generate**: AI creates personalized horoscope in English
+2. **Translate**: IndicTrans2 neural model translates to target language
+3. **Format**: Language-specific post-processing and cleanup
+4. **Cache**: Store translated responses for performance
 
 ## 🏗️ Architecture
 
@@ -39,30 +45,33 @@ astrochat/
 ## 🛠️ Quick Start
 
 ### Prerequisites
-- Docker and Docker Compose
+- Python 3.8+
 - Google Gemini API Key
+- 4GB+ RAM (for translation model)
 
-### 1. Clone and Setup
+### 1. Setup and Run
 ```bash
 git clone <repository-url>
 cd astrochat
+./run.sh
 ```
 
-### 2. Start Services
-```bash
-./start.sh
-```
+The `run.sh` script handles everything:
+- Environment setup
+- Dependency installation
+- Service initialization
+- API server startup
 
-The script will:
-- Prompt for your Gemini API key
-- Build and start all services
-- Wait for services to be ready
-- Display API endpoints
-
-### 3. Test the API
+### 2. Test Translation API
 ```bash
+# English (default)
 curl -X POST "http://localhost:8000/horoscope" \
-     -H "Content-Type: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John", "birth_date": "1990-06-15", "language": "en"}'
+
+# Hindi translation
+curl -X POST "http://localhost:8000/horoscope" \
+  -H "Content-Type: application/json" \
      -d '{
        "name": "Priya",
        "birth_date": "1995-08-20",
@@ -142,7 +151,7 @@ docker-compose build --no-cache
 ## 🔍 Troubleshooting
 
 ### Model Loading Takes Time
-The IndicTrans2 model (2.8GB) takes several minutes to load on first startup. This is normal.
+The IndicTrans2 model takes several minutes to load on first startup. This is normal.
 
 ### Cache Issues
 Clear Redis cache:
