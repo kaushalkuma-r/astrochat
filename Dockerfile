@@ -17,12 +17,10 @@ ENV PIP_RETRIES=3
 ENV PIP_DEFAULT_TIMEOUT=300
 
 # Copy requirements first for better caching
-COPY requirements.txt requirements-minimal.txt ./
+COPY requirements.txt ./
 
 # Install Python dependencies with retry and timeout settings
-RUN pip install --no-cache-dir --timeout 300 --retries 3 -r requirements-minimal.txt && \
-    pip install --no-cache-dir --timeout 300 --retries 3 pandas==2.0.3 numpy==1.24.3 && \
-    pip install --no-cache-dir --timeout 300 --retries 3 torch>=2.0.0 transformers>=4.30.0 IndicTransToolkit>=1.0.0 sentencepiece>=0.1.99
+RUN pip install --no-cache-dir --timeout 300 --retries 3 -r requirements.txt
 
 # Copy application code
 COPY . .

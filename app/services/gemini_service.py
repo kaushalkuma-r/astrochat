@@ -9,8 +9,8 @@ from typing import List, Dict, Optional, Any
 from datetime import date
 
 import google.generativeai as genai
-from .config import settings
-from .models import PanchangData
+from app.config import settings
+from app.models import PanchangData
 
 
 class GeminiService:

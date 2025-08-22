@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Astrochat Docker Startup Script
-echo "🔮 Welcome to Astrochat Docker Setup!"
+echo "🚀 Astrochat - Complete Startup Script"
 echo "======================================"
 
 # Check if Docker and Docker Compose are installed
@@ -17,7 +16,7 @@ fi
 
 # Check if .env file exists, if not create it
 if [ ! -f .env ]; then
-    echo "📝 Creating .env file..."
+    echo "📝 Creating .env file from template..."
     cp env.example .env
 fi
 
@@ -37,22 +36,26 @@ echo "💾 Updating .env file with your API key..."
 sed -i "s/GEMINI_API_KEY=.*/GEMINI_API_KEY=$GEMINI_API_KEY/" .env
 
 echo ""
-echo "🚀 Starting Astrochat services..."
+echo "🔨 Building and starting Astrochat services..."
 echo "   This may take a few minutes on first run..."
 
+# Stop any existing containers
+echo "🛑 Stopping any existing containers..."
+docker-compose down 2>/dev/null
+
 # Build and start services
+echo "🚀 Building and starting services..."
 docker-compose up --build -d
 
-# Wait for services to be healthy
+# Wait for services to be ready
 echo ""
 echo "⏳ Waiting for services to be ready..."
 
 # Wait for PostgreSQL
 echo "📊 Waiting for PostgreSQL..."
-echo "   This may take a minute on first run..."
 until docker-compose exec -T postgres pg_isready -U astrochat -d astrochat 2>/dev/null; do
     echo "   PostgreSQL is starting..."
-    sleep 10
+    sleep 5
 done
 echo "✅ PostgreSQL is ready!"
 
@@ -60,31 +63,31 @@ echo "✅ PostgreSQL is ready!"
 echo "🔴 Waiting for Redis..."
 until docker-compose exec -T redis redis-cli ping 2>/dev/null; do
     echo "   Redis is starting..."
-    sleep 5
+    sleep 3
 done
 echo "✅ Redis is ready!"
 
 # Wait for API to be ready
 echo "🌐 Waiting for Astrochat API..."
+echo "   (This may take a minute for the first startup)"
 until curl -f http://localhost:8000/health &> /dev/null; do
-    echo "   Model is loading..."
+    echo "   API is starting..."
     sleep 10
 done
 echo "✅ Astrochat API is ready!"
 
 echo ""
-echo "🎉 Astrochat is now running!"
+echo "🎉 Astrochat is now running successfully!"
 echo "======================================"
 echo "📊 API Documentation: http://localhost:8000/docs"
 echo "🔍 Health Check: http://localhost:8000/health"
-echo "📈 ChromaDB Info: http://localhost:8000/chroma-info"
-echo "💾 Cache Stats: http://localhost:8000/cache-stats"
 echo ""
 echo "🚀 Test the API:"
 echo "curl -X POST \"http://localhost:8000/horoscope\" \\"
 echo "     -H \"Content-Type: application/json\" \\"
-echo "     -d '{\"name\": \"TestUser\", \"birth_date\": \"1995-08-20\", \"birth_time\": \"14:30\", \"birth_place\": \"Jaipur, India\"}'"
+echo "     -d '{\"name\": \"TestUser\", \"birth_date\": \"1995-08-20\", \"birth_time\": \"14:30\", \"birth_place\": \"Mumbai, India\"}'"
 echo ""
 echo "🛑 To stop services: docker-compose down"
 echo "📋 To view logs: docker-compose logs -f"
+echo "🔄 To restart: ./run.sh"
 echo "======================================"

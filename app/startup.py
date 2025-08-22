@@ -5,7 +5,7 @@ Application startup module to initialize all services.
 import logging
 from app.database import create_tables
 from app.services.chroma_service import ChromaService
-from app.services.translation_service import TranslationService
+# from app.services.translation_service import TranslationService
 
 logger = logging.getLogger(__name__)
 
@@ -44,14 +44,17 @@ def initialize_services():
         except Exception as e:
             logger.error(f"❌ ChromaDB initialization error: {e}")
         
-        # Step 3: Initialize translation service
-        logger.info("🌐 Initializing translation service...")
-        translation_service = TranslationService()
+        # Step 3: Translation service disabled
+        # logger.info("🌐 Initializing translation service...")
+        # translation_service = TranslationService()
+        # 
+        # if translation_service.is_initialized:
+        #     logger.info("✅ Translation service initialized successfully!")
+        # else:
+        #     logger.warning("⚠️ Translation service initialization failed - will use English only")
         
-        if translation_service.is_initialized:
-            logger.info("✅ Translation service initialized successfully!")
-        else:
-            logger.warning("⚠️ Translation service initialization failed - will use English only")
+        logger.info("🌐 Translation service disabled - using English only")
+        translation_service = None
         
         logger.info("🎉 All services initialized successfully!")
         return True

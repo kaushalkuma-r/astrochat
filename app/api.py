@@ -4,10 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import date
-
+from app.services.chroma_service import ChromaService
 from app.database import get_db
 from app.models import UserCreate, UserResponse, HoroscopeRequest, HoroscopeResponse, HoroscopeDirectRequest, HoroscopeDirectResponse
-from app.services import HoroscopeService, UserService
+from app.horoscope_services import UserService, HoroscopeService
 from app.startup import initialize_services, get_chroma_service, get_translation_service
 
 # Setup logger
@@ -45,13 +45,14 @@ async def startup_event():
     
     if success:
         # Initialize horoscope service with global instances
-        from app.services.chroma_service import ChromaService
-from app.services.translation_service import TranslationService
+        
+        # from app.services.translation_service import TranslationService
         
         # Create horoscope service with global instances
         horoscope_service = HoroscopeService()
         horoscope_service.chroma_service = get_chroma_service()
-        horoscope_service.translation_service = get_translation_service()
+        # horoscope_service.translation_service = get_translation_service()
+        horoscope_service.translation_service = None  # Translation disabled
         
         logger.info("✅ Astrochat API initialization completed successfully!")
     else:

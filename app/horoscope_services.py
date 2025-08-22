@@ -8,7 +8,7 @@ from app.services.panchang_service import PanchangService
 from app.services.chroma_service import ChromaService
 from app.services.gemini_service import GeminiService
 from app.services.cache_service import CacheService
-from app.services.translation_service import TranslationService
+# from app.services.translation_service import TranslationService
 
 
 class HoroscopeService:
@@ -207,31 +207,35 @@ class HoroscopeService:
         )
         print(f"📤 DEBUG: Response object created: {response}")
         
-        # Step 6.5: Translate if requested language is not English
-        target_language = request.language.lower() if request.language else "en"
-        if target_language != "en" and self.translation_service:
-            print(f"🌐 DEBUG: Translating horoscope to {target_language}...")
-            response_dict = {
-                "zodiac": response.zodiac,
-                "insight": response.insight,
-                "language": response.language
-            }
-            
-            translated_response = self.translation_service.translate_horoscope_response(
-                response_dict, target_language
-            )
-            
-            if translated_response:
-                response = HoroscopeDirectResponse(
-                    zodiac=translated_response["zodiac"],
-                    insight=translated_response["insight"],
-                    language=translated_response["language"]
-                )
-                print(f"✅ DEBUG: Horoscope translated to {target_language}")
-            else:
-                print(f"⚠️ DEBUG: Translation failed, keeping original English response")
-        elif target_language != "en" and not self.translation_service:
-            print(f"⚠️ DEBUG: Translation service not available, keeping original English response")
+        # Step 6.5: Translation disabled - always return English
+        # target_language = request.language.lower() if request.language else "en"
+        # if target_language != "en" and self.translation_service:
+        #     print(f"🌐 DEBUG: Translating horoscope to {target_language}...")
+        #     response_dict = {
+        #         "zodiac": response.zodiac,
+        #         "insight": response.insight,
+        #         "language": response.language
+        #     }
+        #     
+        #     translated_response = self.translation_service.translate_horoscope_response(
+        #         response_dict, target_language
+        #     )
+        #     
+        #     if translated_response:
+        #         response = HoroscopeDirectResponse(
+        #             zodiac=translated_response["zodiac"],
+        #             insight=translated_response["insight"],
+        #             language=translated_response["language"]
+        #         )
+        #         print(f"✅ DEBUG: Horoscope translated to {target_language}")
+        #     else:
+        #         print(f"⚠️ DEBUG: Translation failed, keeping original English response")
+        # elif target_language != "en" and not self.translation_service:
+        #     print(f"⚠️ DEBUG: Translation service not available, keeping original English response")
+        
+        # Always set language to English
+        response.language = "en"
+        print(f"🌐 DEBUG: Translation disabled - returning English response")
         
         # Step 7: Cache the response
         print(f"💾 DEBUG: Caching response for future requests...")

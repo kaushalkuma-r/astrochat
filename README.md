@@ -26,7 +26,7 @@ astrochat/
 │   ├── config.py         # Configuration
 │   ├── database.py       # Database models
 │   ├── models.py         # Pydantic models
-│   ├── services.py       # Main business logic
+│   ├── horoscope_services.py  # Main business logic
 │   ├── startup.py        # Application startup
 │   └── utils.py          # Utility functions
 ├── tests/                # Test files
